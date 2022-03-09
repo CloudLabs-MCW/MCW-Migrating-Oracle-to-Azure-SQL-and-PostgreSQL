@@ -30,8 +30,9 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
   - [Solution architecture](#solution-architecture)
   - [Requirements](#requirements)
   - [Exercise 1: Setup Oracle 21c Express Edition](#exercise-1-setup-oracle-21c-express-edition)
-    - [Task 1: Create the Northwind database in Oracle 21c XE](#task-1-create-the-northwind-database-in-oracle-21c-xe)
-    - [Task 2: Configure the Starter Application to use Oracle](#task-2-configure-the-starter-application-to-use-oracle)
+    - [Task 1: Install the pre-req applications](#task-1-install-the-pre-req-applications)
+    - [Task 2: Create the Northwind database in Oracle 21c XE](#task-2-create-the-northwind-database-in-oracle-21c-xe)
+    - [Task 3: Configure the Starter Application to use Oracle](#task-3-configure-the-starter-application-to-use-oracle)
   - [Exercise 2: Assess the Oracle 21c Database before Migrating to PostgreSQL](#exercise-2-assess-the-oracle-21c-database-before-migrating-to-postgresql)
     - [Task 1: Update Statistics and Identify Invalid Objects](#task-1-update-statistics-and-identify-invalid-objects)
   - [Exercise 3: Prepare to Migrate the Oracle database to PostgreSQL](#exercise-3-prepare-to-migrate-the-oracle-database-to-postgresql)
@@ -88,7 +89,65 @@ Duration: 45 minutes
 
 In this exercise, you will load a sample database supporting the application. Ensure that you installed Oracle XE, Oracle Data Access Components, and Oracle SQL Developer, as detailed in the Before the Hands-on Lab documents.
 
-### Task 1: Create the Northwind database in Oracle 21c XE
+### Task 1: Install the pre-req applications.
+
+1. On the LabVM, navigate to the path **C:\LabFiles\OracleXE213_Win64**. Right-click `setup.exe`, and select **Run as administrator**.
+
+   ![In File Explorer, setup.exe is selected, and Run as administrator is highlighted in the shortcut menu.](https://raw.githubusercontent.com/CloudLabs-MCW/MCW-Migrating-Oracle-to-Azure-SQL-and-PostgreSQL/master/Hands-on%20lab/media/postgresql1.png "Run setup.exe as an administrator")
+   
+2. Select **Next** to step through each screen of the installer, accepting the license agreement and default values, until you get to the **Specify Database Passwords** screen.
+
+3.  On the **Oracle Database Information** screen, set the password to **Password.1!!**, and select **Next**.
+
+    ![The above credentials are entered on the Oracle Database Information screen.](https://raw.githubusercontent.com/CloudLabs-MCW/MCW-Migrating-Oracle-to-Azure-SQL-and-PostgreSQL/master/Hands-on%20lab/media/21c.png "Set the password")
+
+4.  Select **Install**. Once the installation completes, take note of the ports assigned.
+
+    ![Several of the ports being assigned are highlighted on the Summary screen.](https://raw.githubusercontent.com/CloudLabs-MCW/MCW-Migrating-Oracle-to-Azure-SQL-and-PostgreSQL/master/Hands-on%20lab/media/postgresql.png "Note the ports being assigned")
+
+5. Select **Finish** on the final dialog to complete the installation.
+
+6. Now to install oracle data access component, Navigate to the path "C:\LabFiles\oracledataaccesscomponent", and right-click `setup.exe`, then select **Run as administrator** to begin the installation.
+
+7. Select **Next** to accept the default language, English, on the first screen.
+
+8. On the Specify Oracle Home User screen, accept the default, Use Windows Built-in Account, and select **Next**.
+
+9. Accept the default installation locations, and select **Next**.
+
+10. On the **Available Product Components**, uncheck **Oracle Data Access Components Documentation for Visual Studio**, and select **Next**.
+
+    ![Oracle Data Access Components Documentation for Visual Studio is cleared on the Available Product Components screen, and Next is selected at the bottom.](./media/oracle-odac-install-product-components.png "Clear Oracle Data Access Components Documentation for Visual Studio")
+
+11. On the ODP.NET screen, check the box for **Configure ODP.NET and/or Oracle Providers for ASP.NET at machine-wide level**, and select **Next**.
+
+    ![Configure ODP.NET and/or Oracle Providers for ASP.NET at machine-wide level is selected on the ODP.NET screen, and Next is selected at the bottom.](./media/oracle-odac-install-odp-net.png "Select Configure ODP.NET and/or Oracle Providers for ASP.NET at machine-wide level")
+
+12. If the Next button is disabled on the Perform Prerequisite Checks screen, check the **Ignore All** box, and then select **Next**. This screen will be skipped by the installer if no missing prerequisites are found.
+
+    ![The Ignore All box is cleared on highlighted on the Perform Prerequisite Checks screen, and Next is selected at the bottom.](./media/oracle-odac-install-prerequisite-checks.png "Perform Prerequisite Checks")
+
+13. On the Summary screen, select **Install**.
+
+14. On the Finish screen, select **Close**.
+
+15. Now to install SSMA, Navigate to ***"C:\LabFiles\"***  And open ssma.msi. Then Select **Next**.
+
+    ![View the Setup start screen.](./media/ssma-installer-welcome.png "SSMA installer start screen")
+
+16. Accept the license agreement. Select **Next**.
+
+17. On the **Choose Setup Type** window, select **Typical**.
+
+    ![Select the Typical install type in the SSMA MSI installer.](./media/ssma-install-setup-type.png "Typical install type")
+
+18. On the **Ready to Install** window, accept the defaults. Then, select **Install**.
+
+    ![Accept defaults for telemetry usage and version updates.](./media/ssma-install-ready-to-install.png "Accept defaults")
+
+19. Wait for the installation to complete.
+
+### Task 2: Create the Northwind database in Oracle 21c XE
 
 WWI has provided you with a copy of their application, including a database script to create their Oracle database. They have asked that you use this as a starting point for migrating their database and application to Azure SQL DB. In this task, you will create a connection to the Oracle database on your Lab VM.
 
@@ -139,7 +198,7 @@ WWI has provided you with a copy of their application, including a database scri
 
     ![Presenting the tables and views generated by the Oracle scripts.](./media/views-table-validation.png "Oracle tables and views")
 
-### Task 2: Configure the Starter Application to use Oracle
+### Task 3: Configure the Starter Application to use Oracle
 
 In this task, you will add the necessary configuration to the `NorthwindMVC` solution to connect to the Oracle database you created in the previous task.
 
@@ -239,7 +298,7 @@ In this task, we will create the new application user and create the NW database
     - For **Password**, enter the admin user password you provided during deployment.
     - Select **Save** when you are ready to connect.
 
-    ![Specifying the database connection.](./media/specifying-db-connection.png "DB connection specifications")
+    ![Specifying the database connection.](./media/create-server-pgadmin-new.png "DB connection specifications")
 
 5. If the connection is successful, it should appear under the **Servers** browser dropdown.
 
@@ -255,7 +314,7 @@ In this task, we will create the new application user and create the NW database
 
 8. Under **Privileges**, change the **Can log in?** slider to the **Yes** position.
 
-    ![Screenshot showing how to define privileges.](./media/nw-defined-privileges.png "Defining Privileges window")
+    ![Screenshot showing how to define privileges.](./media/create-login-group-role-new.png "Defining Privileges window")
 
 9.  Finally, navigate to **Membership**.
 
@@ -263,7 +322,7 @@ In this task, we will create the new application user and create the NW database
     - Do not select the checkbox next to the role name (this user will not be granting the azure_pg_admin role to others).
     - Select **Save**.
 
-    ![Setting the NW role as a member of the azure_pg_admin role.](./media/set-role-membership-5.4.png "azure_pg_admin role membership")
+    ![Setting the NW role as a member of the azure_pg_admin role.](./media/azure-pgadmin-group-role.png "azure_pg_admin role membership")
 
 10. If you did not deploy the lab ARM template, you need to create a new database. Simply right-click the **Databases** dropdown and select **Create > Database...**. Provide `NW` as the database name and the set the owner to the admin user configured in the Azure provisioning step.
 
@@ -559,6 +618,8 @@ Our application utilizes a single stored procedure, so we must be able to migrat
     A second detail to keep in mind is NULLs vs. empty strings. In PostgreSQL, they are handled differently. This is a small distinction in Oracle that can be overlooked, leading to incomplete query results.
 
 4. We will need to edit the procedure's parameter list, and we can do this by using a refcursor. Replace the existing last parameter of the procedure, `cur_OUT INOUT PKGENTLIB_ARCHITECTURE.CURENTLIB_ARCHITECTURE`, with `cur_OUT INOUT REFCURSOR`.
+
+    ![Screenshot showing how to migrate parameter procedure using ora2pg.](./media/salesbyyear-refcursor.png "Exporting with ora2pg")
 
 5. A useful PostgreSQL extension that facilitates greater compatibility with Oracle database objects is **orafce**, which is provided with Azure Database for PostgreSQL. To enable it, navigate to pgAdmin, enter your master password, and connect to your PostgreSQL instance. Then, enter the following command into the query editor and execute it:
 
